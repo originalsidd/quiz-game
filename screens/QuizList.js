@@ -1,49 +1,50 @@
-import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
+import { StyleSheet, Text, Dimensions, View, FlatList } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useSelector } from "react-redux";
 
-import Card from "../components/Card";
 import HeaderButton from "../components/HeaderButton";
 import QuizCard from "../components/QuizCard";
-import SUBJECTS from "../data/Subjects";
-import COLOR_ARR from "../data/ColorArray";
 
 import Colors from "../constants/Colors";
 
-const QuizList = () => {
-  const length = Dimensions.get("window").width / 2 - 25;
+const QuizList = (props) => {
+  const subId = props.route.params.id;
+
+  const QUIZES = useSelector((state) => {
+    for (const key in state.quiz) {
+      if (key === subId) {
+        return state.quiz[key];
+      }
+    }
+  });
+
   return (
-    <ScrollView style={styles.screen}>
-      <View style={styles.row}>
-        {SUBJECTS.map((item, index) => (
-          <Card
-            width={length}
-            height={length}
-            padding={10}
-            margin={10}
-            color={COLOR_ARR[index]}
-            key={index}
-          >
-            <QuizCard title={item} />
-          </Card>
-        ))}
-      </View>
-    </ScrollView>
+    <FlatList
+      data={QUIZES}
+      keyExtractor={(item) => item.id}
+      renderItem={(itemData) => (
+        <QuizCard
+          navigation={props.navigation}
+          route={props.route}
+          title={itemData.item.title}
+          desc={itemData.item.description}
+          noq={itemData.item.noq}
+        />
+      )}
+      style={{ backgroundColor: "#eee" }}
+    />
   );
 };
 
 export const screenOptions = (navdata) => {
   return {
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Menu"
-          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-          onPress={() => {
-            navdata.navigation.toggleDrawer();
-          }}
-        />
-      </HeaderButtons>
-    ),
+    headerTitle: navdata.route.params.sub,
+    headerTitleAlign: "center",
+    headerStyle: {
+      backgroundColor: "#eee",
+      elevation: 0,
+      shadowOpacity: 0,
+    },
   };
 };
 
@@ -52,10 +53,7 @@ export default QuizList;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  },
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
+    height: "100%",
+    width: "100%",
   },
 });

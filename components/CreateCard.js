@@ -9,7 +9,7 @@ import {
 
 import Card from "./Card";
 
-const QuizCard = (props) => {
+const CreateCard = (props) => {
   let TouchableCmp = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -17,7 +17,7 @@ const QuizCard = (props) => {
   }
 
   const quizHandler = () => {
-    props.navigation.navigate("App");
+    props.navigation.navigate("Edit");
   };
 
   return (
@@ -37,7 +37,7 @@ const QuizCard = (props) => {
   );
 };
 
-export default QuizCard;
+export default CreateCard;
 
 const styles = StyleSheet.create({
   quiz: {

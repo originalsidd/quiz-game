@@ -7,11 +7,6 @@ const Card = (props) => {
       style={{
         ...styles.card,
         ...props.style,
-        width: props.width,
-        height: props.height,
-        padding: props.padding,
-        margin: props.margin,
-        backgroundColor: props.color,
       }}
     >
       {props.children}
@@ -29,5 +24,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 10,
+    backgroundColor: "white",
   },
 });
