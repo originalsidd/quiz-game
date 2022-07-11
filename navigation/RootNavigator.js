@@ -1,14 +1,12 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import useAuthentication from '../utils/hooks/useAuthentication';
 
-import { AppNavigator } from "./Navigators";
+import { AppNavigator, AuthNavigator } from './Navigators';
 
 const RootNavigator = () => {
-  return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
-  );
+    const { user } = useAuthentication();
+
+    return user ? <AppNavigator /> : <AuthNavigator />;
 };
 
 export default RootNavigator;

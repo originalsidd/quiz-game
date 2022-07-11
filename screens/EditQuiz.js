@@ -1,9 +1,26 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+} from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+
 import EditDesc from "../components/EditDesc";
+import QCard from "../components/QCard";
 import Colors from "../constants/Colors";
 
-const EditQuiz = () => {
+const EditQuiz = (props) => {
+  const quizId = props.route.params ? props.route.params.quizId : null;
+  const QUIZ = useSelector((state) =>
+    state.faculty.Sub.find((quiz) => quiz.id === quizId)
+  );
+  const QUES_ARR = QUIZ.ques_arr;
+
   const [show, setShow] = useState(false);
   const editDescHandler = () => {
     setShow(true);
@@ -11,9 +28,23 @@ const EditQuiz = () => {
 
   return (
     <View style={styles.screen}>
+      <EditDesc show={show} setShow={setShow} />
+      <View style={styles.quizTitle}>
+        <Text style={styles.title}>Quiz Title</Text>
+      </View>
       <View style={styles.quizInfo}>
-        <EditDesc show={show} setShow={setShow} />
-        {/* <View style={styles.quizTitle}>
+        <FlatList
+          data={QUES_ARR}
+          renderItem={(itemData) => <QCard item={itemData.item} />}
+          horizontal
+          pagingEnabled={true}
+          snapToInterval={Dimensions.get("window").width}
+          decelerationRate={"normal"}
+          snapToAlignment={"center"}
+          overScrollMode={"never"}
+        />
+      </View>
+      {/* <View style={styles.quizTitle}>
           <Text style={styles.title}>Title</Text>
         </View>
         <View style={styles.quizDesc}>
@@ -28,16 +59,12 @@ const EditQuiz = () => {
           <Text style={styles.Desc}>Number of Questions:</Text>
           <Text style={styles.desc}>20</Text>
         </View> */}
-      </View>
       <View style={styles.button}>
         <Button
           title="Edit Desc"
           color={Colors.accent}
           onPress={editDescHandler}
         />
-      </View>
-      <View style={styles.button}>
-        <Button title="Start" color={Colors.accent} onPress={() => {}} />
       </View>
     </View>
   );
@@ -49,9 +76,10 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
+    marginBottom: 20,
   },
   quizInfo: {
-    flex: 3 / 4,
+    flex: 1,
     width: "100%",
     // justifyContent: "center",
     alignItems: "center",
@@ -60,10 +88,9 @@ const styles = StyleSheet.create({
   quizTitle: {
     width: "90%",
     justifyContent: "center",
-    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    padding: 10,
+    paddingVertical: 10,
     margin: 10,
   },
   title: {

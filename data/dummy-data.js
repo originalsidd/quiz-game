@@ -79,7 +79,9 @@ const QUES = [
 
 export const FAC = [
   FacQuiz("1", "Maths quiz", "Geometry Term 1 Quiz", [
-    Question(1, "2x2=", "4", ["1", "2", "3", "4"]),
+    Question(1, "2x2=", "4", ["1", "2", "3", "4", "5", "6", "7", "8"]),
     Question(2, "2x1=", "2", ["1", "2", "3", "4"]),
+    Question(3, "2x3=", "6", ["1", "6", "3", "4"]),
+    Question(4, "2x4=", "4", ["8", "2", "3", "4"]),
   ]),
 ];

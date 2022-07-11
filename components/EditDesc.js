@@ -18,7 +18,7 @@ const EditDesc = (props) => {
             <Text style={styles.title}>Edit Description</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput multiline={true} style={styles.input} />
+            <TextInput autoFocus multiline={true} style={styles.input} />
           </View>
           <View style={styles.button}>
             <Button

@@ -1,12 +1,27 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  Button,
+} from "react-native";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 
-const AddButton = () => {
+const AddButton = (props) => {
+  const addQuizHandler = () => {
+    props.navigation.navigate("Edit");
+  };
+
   return (
     <View style={styles.button}>
-      <TouchableOpacity style={styles.touchable} onPress={() => {}}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.touchable}
+        onPress={addQuizHandler}
+      >
         <Ionicons name="md-add" size={24} color={Colors.accent} />
       </TouchableOpacity>
     </View>
@@ -18,19 +33,20 @@ export default AddButton;
 const styles = StyleSheet.create({
   button: {
     position: "absolute",
-    right: 20,
-    bottom: 30,
+    right: Dimensions.get("window").width / 23,
+    bottom: Dimensions.get("window").width / 23,
     height: 60,
     width: 60,
-    backgroundColor: Colors.primary,
-    borderRadius: 50,
-    elevation: 2,
     zIndex: 1,
-    borderColor: Colors.accent,
   },
   touchable: {
     flex: 1,
+    height: "100%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 50,
+    elevation: 2,
   },
 });

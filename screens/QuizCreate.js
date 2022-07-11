@@ -13,7 +13,7 @@ const QuizCreate = (props) => {
 
   return (
     <View style={styles.screen}>
-      <AddButton />
+      <AddButton navigation={props.navigation} />
       <FlatList
         data={QUIZES}
         keyExtractor={(item) => item.id}
@@ -21,9 +21,7 @@ const QuizCreate = (props) => {
           <CreateCard
             navigation={props.navigation}
             route={props.route}
-            title={itemData.item.title}
-            desc={itemData.item.description}
-            noq={itemData.item.noq}
+            item={itemData.item}
           />
         )}
         style={{ backgroundColor: "#eee" }}

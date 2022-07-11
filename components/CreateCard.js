@@ -16,20 +16,23 @@ const CreateCard = (props) => {
     TouchableCmp = TouchableNativeFeedback;
   }
 
-  const quizHandler = () => {
-    props.navigation.navigate("Edit");
+  const quizHandler = (id) => {
+    props.navigation.navigate("Edit", {
+      screen: "edit",
+      params: { quizId: id },
+    });
   };
 
   return (
     <Card style={styles.quiz}>
-      <TouchableCmp onPress={quizHandler} useForeground>
+      <TouchableCmp onPress={() => quizHandler(props.item.id)} useForeground>
         <View style={styles.touchable}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{props.title}</Text>
-            <Text style={styles.noq}>{props.noq}</Text>
+            <Text style={styles.title}>{props.item.title}</Text>
+            <Text style={styles.noq}>{props.item.noq}</Text>
           </View>
           <View style={styles.descContainer}>
-            <Text style={styles.desc}>{props.desc}</Text>
+            <Text style={styles.desc}>{props.item.description}</Text>
           </View>
         </View>
       </TouchableCmp>
