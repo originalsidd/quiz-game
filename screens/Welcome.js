@@ -32,10 +32,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 
-    buttons: {},
+    buttons: {
+        width: 200,
+        height: 200,
+        margin: 20,
+    },
 
     button: {
-        marginTop: 10,
+        marginTop: 50,
+        height: 40,
     },
 });
 

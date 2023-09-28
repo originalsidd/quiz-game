@@ -16,7 +16,9 @@ import ProfileView from '../screens/ProfileView';
 
 import Colors from '../constants/Colors';
 import DrawerContent from '../components/DrawerContent';
-import AttendQuiz from '../screens/AttendQuiz';
+import AttendQuiz, {
+    screenOptions as attendQuizListOptions1,
+} from '../screens/AttendQuiz';
 import EditQuiz from '../screens/EditQuiz';
 import QuizCategory from '../screens/QuizCategory';
 
@@ -27,7 +29,7 @@ import Welcome from '../screens/Welcome';
 const QuizStack = createMaterialTopTabNavigator();
 const OptionStack = createDrawerNavigator();
 const AttendQuizStack = createStackNavigator();
-const AppStack = createStackNavigator();
+const AppStack = createDrawerNavigator();
 const QuizCategoryStack = createStackNavigator();
 const EditQuizStack = createStackNavigator();
 const Stack = createStackNavigator();
@@ -40,8 +42,8 @@ const defaultTabOptions = {
         height: 4,
     },
     tabBarActiveTintColor: Colors.accent,
-    tabBarInactiveTintColor: 'rgba(0,0,0,0.5)',
-    tabBarPressColor: 'rgba(173,2,73,0.2)',
+    tabBarInactiveTintColor: '#8fe0ff',
+    tabBarPressColor: '#8fe0ff',
 };
 
 const defaultDrawerOptions = {
@@ -52,6 +54,7 @@ const defaultDrawerOptions = {
     },
     headerTitle: 'Quiz Game',
     headerTitleAlign: 'center',
+    headerTintColor: '#8fe0ff',
     drawerActiveTintColor: Colors.accent,
     drawerType: 'front',
     drawerStatusBarAnimation: 'slide',
@@ -126,11 +129,6 @@ const QuizNavigator = () => {
                 component={QuizCategoryNavigatory}
                 options={quizOptions}
             />
-            <QuizStack.Screen
-                name='profileView'
-                component={ProfileView}
-                options={profileOptions}
-            />
         </QuizStack.Navigator>
     );
 };
@@ -152,15 +150,12 @@ const CreateQuizNavigator = () => {
     );
 };
 
-export const OptionNavigator = () => {
+const OptionNavigator = () => {
     return (
-        <OptionStack.Navigator
-            drawerContent={DrawerContent}
-            screenOptions={defaultDrawerOptions}
-        >
+        <OptionStack.Navigator screenOptions={{ headerShown: false }}>
             <OptionStack.Screen
                 name='TakeQuiz'
-                component={QuizNavigator}
+                component={QuizCategoryNavigatory}
                 options={takeOptions}
             />
             <OptionStack.Screen
@@ -175,7 +170,11 @@ export const OptionNavigator = () => {
 const AttendQuizNavigator = () => {
     return (
         <AttendQuizStack.Navigator
-            screenOptions={{ ...defaultOptions, ...attendQuizOptions }}
+            screenOptions={{
+                ...defaultOptions,
+                ...attendQuizOptions,
+                ...attendQuizListOptions1,
+            }}
         >
             <AttendQuizStack.Screen name='AttendQuiz' component={AttendQuiz} />
         </AttendQuizStack.Navigator>
@@ -195,8 +194,14 @@ const EditQuizNavigator = () => {
 export const AppNavigator = () => {
     return (
         <NavigationContainer>
-            <AppStack.Navigator screenOptions={{ headerShown: false }}>
-                <AppStack.Screen name='Home' component={OptionNavigator} />
+            <AppStack.Navigator
+                drawerContent={DrawerContent}
+                screenOptions={defaultDrawerOptions}
+            >
+                <AppStack.Screen
+                    name='Home'
+                    component={QuizCategoryNavigatory}
+                />
                 <AppStack.Screen name='App' component={AttendQuizNavigator} />
                 <AppStack.Screen name='Edit' component={EditQuizNavigator} />
             </AppStack.Navigator>

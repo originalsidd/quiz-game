@@ -22,6 +22,11 @@ const store = createStore(rootReducer);
 export default function App() {
     return (
         <Provider store={store}>
+            <StatusBar
+                backgroundColor='#202c36'
+                animated={true}
+                style='light'
+            />
             <RootNavigator />
         </Provider>
     );

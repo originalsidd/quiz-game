@@ -17,7 +17,6 @@ import QuizCard from '../components/QuizCard';
 import Colors from '../constants/Colors';
 
 const QuizList = (props) => {
-    const { user } = useAuthentication();
     const subId = props.route.params.id;
 
     const QUIZES = useSelector((state) => {
