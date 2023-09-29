@@ -1,23 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { createStore, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { enableScreens } from 'react-native-screens';
 
 import './config/firebase';
 
-import quizReducer from './store/reducers/quiz';
-import facReducer from './store/reducers/faculty';
+import { setQuiz } from './store/reducers/reducer';
 import RootNavigator from './navigation/RootNavigator';
 
 enableScreens();
 
-const rootReducer = combineReducers({
-    quiz: quizReducer,
-    faculty: facReducer,
-});
-
-const store = createStore(rootReducer);
+const logger = createLogger();
+const rootReducer = combineReducers({ setQuiz });
+export const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 export default function App() {
     return (

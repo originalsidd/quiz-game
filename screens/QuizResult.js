@@ -18,33 +18,9 @@ import { setQuiz, unsetQuiz } from '../store/actions/action';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditQuiz = (props) => {
-    const [quizArr, setQuizArr] = useState([]);
-    const [quizObj, setQuizObj] = useState(null);
-    const [marked, setMarked] = useState([]);
+const QuizResult = (props) => {
     const flatlistRef = useRef();
-    const dispatch = useDispatch();
-    const quizId = props.route.params.quizId;
-    const QUIZ = useSelector((state) => state.setQuiz.Quiz);
-    useEffect(() => {
-        if (QUIZ.results) {
-            const QUIZobj = {
-                category: QUIZ?.results[0].category,
-                type: QUIZ?.results[0].type,
-                difficulty: QUIZ?.results[0].difficulty,
-                ques_arr: QUIZ?.results,
-            };
-            const arr = Array(QUIZobj.ques_arr.length).fill(0);
-            setMarked(arr);
-            console.log(marked);
-            setQuizObj(QUIZobj);
-            console.log('ABC: ' + QUIZ.results);
-            setQuizArr(QUIZobj.ques_arr);
-        } else {
-            setQuizObj(null);
-            setQuizArr(null);
-        }
-    }, [QUIZ.results]);
+    const [quizData, setQuizData] = useState(null);
 
     const skipHandler = (id) => {
         flatlistRef.current.scrollToIndex({
@@ -53,26 +29,23 @@ const EditQuiz = (props) => {
         });
     };
 
-    const storeQuizResult = async (quizDetails) => {
+    const getQuizResult = async () => {
         try {
-            let value = await AsyncStorage.getItem('q');
-            value = JSON.parse(value);
-            console.log(value);
-            if (value != null) value.push(quizDetails);
-            else value = [quizDetails];
-            await AsyncStorage.setItem('q', JSON.stringify(value));
+            let data = await AsyncStorage.getItem('q');
+            console.log(data);
+            data = JSON.parse(data);
+            console.log(data);
+            setQuizData(data[0]);
         } catch (error) {
             console.log(error);
         }
     };
 
     const markQuiz = (quiz) => {
-        console.log('quiz.marked: ' + quiz.marked);
         const correct = quiz.marked;
-        // correct = correct.map(
-        //     (item, index) => quiz.quizObj.results[index].correct_answer === item
-        // );
-        console.log(quiz.quizObj.results);
+        correct = correct.map(
+            (item, index) => quiz.quizObj.results[index].correct_answer === item
+        );
         console.log(correct);
     };
 
@@ -83,13 +56,16 @@ const EditQuiz = (props) => {
             marked,
         };
         markQuiz(quizDetail);
-        storeQuizResult(quizDetail);
         dispatch(unsetQuiz());
     };
 
+    useEffect(() => {
+        getQuizResult();
+    }, []);
+
     return (
         <View style={styles.screen}>
-            {quizObj === null ? (
+            {quizData === null ? (
                 <View>
                     <Text>Loading</Text>
                 </View>
@@ -107,7 +83,7 @@ const EditQuiz = (props) => {
                         </View>
                     </View>
                     <View style={styles.quizTitle}>
-                        <Text style={styles.title}>{quizObj.category}</Text>
+                        <Text style={styles.title}>{quizData.category}</Text>
                     </View>
                     <View style={styles.quizInfo}>
                         <FlatList
@@ -155,7 +131,7 @@ const EditQuiz = (props) => {
     );
 };
 
-export default EditQuiz;
+export default QuizResult;
 
 const styles = StyleSheet.create({
     screen: {

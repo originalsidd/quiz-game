@@ -1,35 +1,47 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
+import { COLORS } from '../data/dummy-data';
+import { setQuiz } from '../store/actions/action';
+import { connect } from 'react-redux';
 
-const AttendQuiz = () => {
+const AttendQuiz = (props) => {
+    const id = props.route.params.id;
+    const subject = props.route.params.sub;
+    const index = props.route.params.index;
+    const dispatch = useDispatch();
+
+    const attendQuizHandler = () => {
+        const options = {
+            amt: 10,
+            category: 18,
+            difficulty: 'medium',
+        };
+        dispatch(setQuiz(options));
+        props.navigation.navigate('Edit', {
+            screen: 'edit',
+            params: { quizId: id },
+        });
+    };
+
     return (
-        <View style={styles.screen}>
+        <View style={{ ...styles.screen, backgroundColor: COLORS[index] }}>
             <View style={styles.quizInfo}>
                 <View style={styles.quizTitle}>
-                    <Text style={styles.title}>Title</Text>
+                    <Text style={styles.title}>{subject}</Text>
                 </View>
-                <View style={styles.quizDesc}>
-                    <Text style={styles.Desc}>Description:</Text>
-                    <Text style={styles.desc}>
-                        lorem ipsum dolorlorem ipsum dolorlorem ipsum dolor
-                        lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor
-                        lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor
-                        lorem ipsum dolor
-                    </Text>
+                <Text style={styles.desc}>
+                    The quiz consists of 5 questions.
+                </Text>
+                <View style={styles.quizStart}>
+                    <Button
+                        title='Start'
+                        color='#222'
+                        onPress={attendQuizHandler}
+                    />
                 </View>
-                <View style={styles.quizDesc}>
-                    <Text style={styles.Desc}>Number of Questions:</Text>
-                    <Text style={styles.desc}>20</Text>
-                </View>
-            </View>
-            <View style={styles.quizStart}>
-                <Button
-                    title='Start'
-                    color={Colors.accent}
-                    onPress={() => {}}
-                />
             </View>
         </View>
     );
@@ -59,13 +71,20 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     quizInfo: {
-        flex: 3 / 4,
-        width: '100%',
-        // justifyContent: "center",
+        height: 200,
+        width: '90%',
+        justifyContent: 'space-around',
         alignItems: 'center',
         marginVertical: 20,
+        padding: 20,
+        backgroundColor: '#fff',
+        borderColor: '#222',
+        borderWidth: 3,
+        borderStyle: 'dashed',
+        borderRadius: 20,
     },
     quizTitle: {
         width: '90%',

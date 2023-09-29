@@ -19,6 +19,7 @@ const QuizCategory = (props) => {
                     <CategoryCard
                         key={index}
                         item={item}
+                        index={index}
                         navigation={props.navigation}
                         route={props.route}
                         color={COLORS[index]}

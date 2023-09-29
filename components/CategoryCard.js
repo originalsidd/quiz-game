@@ -18,9 +18,10 @@ const QuizCard = (props) => {
     }
 
     const quizHandler = () => {
-        props.navigation.navigate('list', {
+        props.navigation.navigate('AttendQuiz', {
             id: props.item.id,
             sub: props.item.sub,
+            index: props.index,
         });
     };
 

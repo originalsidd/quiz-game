@@ -25,6 +25,7 @@ import QuizCategory from '../screens/QuizCategory';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import Welcome from '../screens/Welcome';
+import QuizResult from '../screens/QuizResult';
 
 const QuizStack = createMaterialTopTabNavigator();
 const OptionStack = createDrawerNavigator();
@@ -32,6 +33,7 @@ const AttendQuizStack = createStackNavigator();
 const AppStack = createDrawerNavigator();
 const QuizCategoryStack = createStackNavigator();
 const EditQuizStack = createStackNavigator();
+const QuizResultsStack = createStackNavigator();
 const Stack = createStackNavigator();
 
 const defaultTabOptions = {
@@ -70,6 +72,17 @@ const defaultOptions = {
     headerTitleAlign: 'center',
 };
 
+const editQuizOptions = {
+    headerStyle: {
+        backgroundColor: Colors.primary,
+        elevation: 0,
+        shadowOpacity: 0,
+    },
+    headerTintColor: '#8fe0ff',
+    headerTitleAlign: 'center',
+    headerTitle: 'Q u i z     i n     P r o g r e s s',
+};
+
 const AppOptions = {
     headerStyle: {
         backgroundColor: Colors.primary,
@@ -100,11 +113,7 @@ const attendQuizOptions = {
     headerTitle: 'Play Quiz',
 };
 
-const editQuizOptions = {
-    headerTitle: 'Edit Quiz',
-};
-
-const QuizCategoryNavigatory = () => {
+const QuizCategoryNavigator = () => {
     return (
         <QuizCategoryStack.Navigator>
             <QuizCategoryStack.Screen
@@ -113,9 +122,19 @@ const QuizCategoryNavigatory = () => {
                 options={{ headerShown: false }}
             />
             <QuizCategoryStack.Screen
-                name='list'
-                component={QuizList}
-                options={quizListOptions}
+                name='AttendQuiz'
+                component={AttendQuiz}
+                options={{ headerShown: false }}
+            />
+            <QuizCategoryStack.Screen
+                name='TakeQuiz'
+                component={QuizCreate}
+                options={{ headerShown: false }}
+            />
+            <QuizCategoryStack.Screen
+                name='Edit'
+                component={EditQuizNavigator}
+                options={{ headerShown: false }}
             />
         </QuizCategoryStack.Navigator>
     );
@@ -126,46 +145,46 @@ const QuizNavigator = () => {
         <QuizStack.Navigator screenOptions={defaultTabOptions}>
             <QuizStack.Screen
                 name='quizList'
-                component={QuizCategoryNavigatory}
+                component={QuizCategoryNavigator}
                 options={quizOptions}
             />
         </QuizStack.Navigator>
     );
 };
 
-const CreateQuizNavigator = () => {
-    return (
-        <QuizStack.Navigator screenOptions={defaultTabOptions}>
-            <QuizStack.Screen
-                name='quizList'
-                component={QuizCreate}
-                options={createOptions}
-            />
-            <QuizStack.Screen
-                name='profileView'
-                component={ProfileView}
-                options={profileOptions}
-            />
-        </QuizStack.Navigator>
-    );
-};
+// const CreateQuizNavigator = () => {
+//     return (
+//         <QuizStack.Navigator screenOptions={defaultTabOptions}>
+//             <QuizStack.Screen
+//                 name='quizList'
+//                 component={QuizCreate}
+//                 options={createOptions}
+//             />
+//             <QuizStack.Screen
+//                 name='profileView'
+//                 component={ProfileView}
+//                 options={profileOptions}
+//             />
+//         </QuizStack.Navigator>
+//     );
+// };
 
-const OptionNavigator = () => {
-    return (
-        <OptionStack.Navigator screenOptions={{ headerShown: false }}>
-            <OptionStack.Screen
-                name='TakeQuiz'
-                component={QuizCategoryNavigatory}
-                options={takeOptions}
-            />
-            <OptionStack.Screen
-                name='CreateQuiz'
-                component={CreateQuizNavigator}
-                options={createOptions}
-            />
-        </OptionStack.Navigator>
-    );
-};
+// const OptionNavigator = () => {
+//     return (
+//         <OptionStack.Navigator screenOptions={{ headerShown: false }}>
+//             <OptionStack.Screen
+//                 name='TakeQuiz'
+//                 component={QuizCategoryNavigator}
+//                 options={takeOptions}
+//             />
+//             <OptionStack.Screen
+//                 name='CreateQuiz'
+//                 component={CreateQuizNavigator}
+//                 options={createOptions}
+//             />
+//         </OptionStack.Navigator>
+//     );
+// };
 
 const AttendQuizNavigator = () => {
     return (
@@ -183,11 +202,21 @@ const AttendQuizNavigator = () => {
 
 const EditQuizNavigator = () => {
     return (
-        <EditQuizStack.Navigator
-            screenOptions={{ ...defaultOptions, ...editQuizOptions }}
-        >
-            <EditQuizStack.Screen name='edit' component={EditQuiz} />
+        <EditQuizStack.Navigator screenOptions={{ headerShown: false }}>
+            <EditQuizStack.Screen
+                name='edit'
+                component={EditQuiz}
+                screenOptions={{ headerShown: false }}
+            />
         </EditQuizStack.Navigator>
+    );
+};
+
+const QuizResultsNavigator = () => {
+    return (
+        <QuizResultsStack.Navigator>
+            <QuizResultsStack.Screen name='Results' component={QuizResult} />
+        </QuizResultsStack.Navigator>
     );
 };
 
@@ -200,10 +229,12 @@ export const AppNavigator = () => {
             >
                 <AppStack.Screen
                     name='Home'
-                    component={QuizCategoryNavigatory}
+                    component={QuizCategoryNavigator}
                 />
-                <AppStack.Screen name='App' component={AttendQuizNavigator} />
-                <AppStack.Screen name='Edit' component={EditQuizNavigator} />
+                <AppStack.Screen
+                    name='Quiz Results'
+                    component={QuizResultsNavigator}
+                />
             </AppStack.Navigator>
         </NavigationContainer>
     );
