@@ -13,16 +13,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import HeaderButton from '../components/HeaderButton';
 import QCard from '../components/QCard';
 import Colors from '../constants/Colors';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { setQuiz, unsetQuiz } from '../store/actions/action';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../navigation/RootNavigator';
+// import useAuthentication from '../utils/hooks/useAuthentication';
 
 const EditQuiz = (props) => {
     const [quizArr, setQuizArr] = useState([]);
     const [quizObj, setQuizObj] = useState(null);
     const [marked, setMarked] = useState([]);
     const flatlistRef = useRef();
+    // const { user } = useAuthentication();
+    const user = useContext(AuthContext);
+    console.log('bruh' + user);
     const dispatch = useDispatch();
     const quizId = props.route.params.quizId;
     const QUIZ = useSelector((state) => state.setQuiz.Quiz);
@@ -55,12 +60,17 @@ const EditQuiz = (props) => {
 
     const storeQuizResult = async (quizDetails) => {
         try {
-            let value = await AsyncStorage.getItem('q');
-            value = JSON.parse(value);
-            console.log(value);
-            if (value != null) value.push(quizDetails);
-            else value = [quizDetails];
-            await AsyncStorage.setItem('q', JSON.stringify(value));
+            // let value = await AsyncStorage.getItem('q');
+            // value = JSON.parse(value);
+            // // console.log(value);
+            // if (value != null) value.push(quizDetails);
+            // else value = [quizDetails];
+            // await AsyncStorage.setItem('q', JSON.stringify(value));
+            await AsyncStorage.setItem(
+                'quiz#' + user.email,
+                // 'q',
+                JSON.stringify([quizDetails])
+            );
         } catch (error) {
             console.log(error);
         }
@@ -119,6 +129,7 @@ const EditQuiz = (props) => {
                                     id={itemData.index + 1}
                                     marked={marked}
                                     setMarked={setMarked}
+                                    isReview={false}
                                 />
                             )}
                             horizontal

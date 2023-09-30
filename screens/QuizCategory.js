@@ -6,10 +6,13 @@ import HeaderButton from '../components/HeaderButton';
 import CategoryCard from '../components/CategoryCard';
 import { SUBJECTS } from '../data/dummy-data';
 import { COLORS } from '../data/dummy-data';
+import useAuthentication from '../utils/hooks/useAuthentication';
 
 import Colors from '../constants/Colors';
 
 const QuizCategory = (props) => {
+    const { user } = useAuthentication();
+    console.log(user);
     return (
         <ScrollView
             style={{ ...styles.screen, backgroundColor: Colors.primary }}

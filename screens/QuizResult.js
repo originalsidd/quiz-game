@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import {
     Button,
     Dimensions,
@@ -17,10 +17,17 @@ import { useEffect } from 'react';
 import { setQuiz, unsetQuiz } from '../store/actions/action';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import useAuthentication from '../utils/hooks/useAuthentication';
+import { AuthContext } from '../navigation/RootNavigator';
 
 const QuizResult = (props) => {
     const flatlistRef = useRef();
+    const [load, setLoad] = useState(true);
     const [quizData, setQuizData] = useState(null);
+    const [quizArr, setQuizArr] = useState(null);
+    const [marked, setMarked] = useState(null);
+    // const { user } = useAuthentication();
+    const user = useContext(AuthContext);
 
     const skipHandler = (id) => {
         flatlistRef.current.scrollToIndex({
@@ -29,16 +36,18 @@ const QuizResult = (props) => {
         });
     };
 
-    const getQuizResult = async () => {
-        try {
-            let data = await AsyncStorage.getItem('q');
-            console.log(data);
-            data = JSON.parse(data);
-            console.log(data);
-            setQuizData(data[0]);
-        } catch (error) {
-            console.log(error);
-        }
+    const getQuizResult = () => {
+        AsyncStorage.getItem('quiz#' + user.email)
+            .then((data) => JSON.parse(data))
+            .then((data) => {
+                setQuizData(data[0]);
+                setQuizArr(data[0].quizObj.ques_arr);
+                setMarked(data[0].marked);
+                console.log('WOWOWOW: ' + marked);
+            })
+            .catch((error) => {
+                console.log('really: ' + error);
+            });
     };
 
     const markQuiz = (quiz) => {
@@ -49,41 +58,34 @@ const QuizResult = (props) => {
         console.log(correct);
     };
 
-    const submitHandler = () => {
-        console.log('marked: ' + marked);
-        const quizDetail = {
-            quizObj,
-            marked,
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getQuizResult();
+        });
+        return () => {
+            unsubscribe;
         };
-        markQuiz(quizDetail);
-        dispatch(unsetQuiz());
-    };
+    }, [props.navigation]);
 
     useEffect(() => {
-        getQuizResult();
-    }, []);
+        setLoad(true);
+        setTimeout(() => {
+            setLoad(false);
+        }, 4000);
+    }, [quizData]);
 
     return (
         <View style={styles.screen}>
-            {quizData === null ? (
+            {load ? (
                 <View>
                     <Text>Loading</Text>
                 </View>
             ) : (
                 <>
-                    <View style={styles.header}>
-                        <View style={styles.headerBox}>
-                            <Text style={styles.time}>Time:</Text>
-                            <TouchableOpacity
-                                style={styles.submit}
-                                onPress={submitHandler}
-                            >
-                                <Text style={styles.submitText}>Submit</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
                     <View style={styles.quizTitle}>
-                        <Text style={styles.title}>{quizData.category}</Text>
+                        <Text style={styles.title}>
+                            {/* {quizData.quizObj.category} */}
+                        </Text>
                     </View>
                     <View style={styles.quizInfo}>
                         <FlatList
@@ -95,6 +97,7 @@ const QuizResult = (props) => {
                                     id={itemData.index + 1}
                                     marked={marked}
                                     setMarked={setMarked}
+                                    isReview={true}
                                 />
                             )}
                             horizontal

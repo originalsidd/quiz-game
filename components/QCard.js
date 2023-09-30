@@ -19,17 +19,21 @@ const QCard = (props) => {
             .map((value) => ({ value, sort: Math.random() }))
             .sort((a, b) => a.sort - b.sort)
             .map(({ value }) => value);
+        if (props.isReview) {
+            setSelected(props.marked[props.id - 1]);
+        }
     }, []);
 
     const selectHandler = (op) => {
+        if (props.isReview) return;
         if (selected == op) {
             const arr = props.marked;
-            props.arr[props.id] = null;
-            props.setmarked(arr);
+            arr[props.id - 1] = null;
+            props.setMarked(arr);
             setSelected(-1);
         } else {
             const arr = props.marked;
-            arr[props.id] = op;
+            arr[props.id - 1] = op;
             props.setMarked(arr);
             setSelected(op);
         }
