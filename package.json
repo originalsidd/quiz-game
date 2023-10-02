@@ -28,6 +28,8 @@
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-element-dropdown": "^2.10.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-pager-view": "5.4.24",
     "react-native-reanimated": "~2.9.1",

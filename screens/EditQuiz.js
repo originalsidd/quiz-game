@@ -8,7 +8,10 @@ import {
     View,
     KeyboardAvoidingView,
     TouchableOpacity,
+    Alert,
+    BackHandler,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderButton from '../components/HeaderButton';
 import QCard from '../components/QCard';
@@ -34,7 +37,7 @@ const EditQuiz = (props) => {
     useEffect(() => {
         if (QUIZ.results) {
             const QUIZobj = {
-                category: QUIZ?.results[0].category,
+                category: QUIZ?.results[0]?.category,
                 type: QUIZ?.results[0].type,
                 difficulty: QUIZ?.results[0].difficulty,
                 ques_arr: QUIZ?.results,
@@ -78,15 +81,26 @@ const EditQuiz = (props) => {
 
     const markQuiz = (quiz) => {
         console.log('quiz.marked: ' + quiz.marked);
-        const correct = quiz.marked;
-        // correct = correct.map(
-        //     (item, index) => quiz.quizObj.results[index].correct_answer === item
-        // );
-        console.log(quiz.quizObj.results);
-        console.log(correct);
+        let correct = quiz.marked;
+        console.log(quiz.quizObj.ques_arr);
+        correct = correct.map(
+            (item, index) =>
+                quiz.quizObj.ques_arr[index].correct_answer === item
+        );
+        const Sum = correct.reduce((accumulator, curr) => accumulator + curr);
+        Alert.alert(
+            'Quiz Submitted',
+            `Your Total Score: ${Sum}/${quiz.marked.length}`,
+            [{ text: 'OK' }]
+        );
     };
 
     const submitHandler = () => {
+        if (quizObj === null) {
+            props.navigation.pop(2);
+            dispatch(unsetQuiz());
+            return;
+        }
         console.log('marked: ' + marked);
         const quizDetail = {
             quizObj,
@@ -95,12 +109,48 @@ const EditQuiz = (props) => {
         markQuiz(quizDetail);
         storeQuizResult(quizDetail);
         dispatch(unsetQuiz());
+        props.navigation.pop(2);
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                let flag = true;
+                Alert.alert(
+                    'Submit Quiz',
+                    'Sure you want to submit the quiz?',
+                    [
+                        {
+                            text: 'Cancel',
+                            onPress: () => (flag = true),
+                            style: 'cancel',
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () => {
+                                submitHandler();
+                                flag = false;
+                            },
+                        },
+                    ]
+                );
+                return flag;
+            };
+
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () =>
+                BackHandler.removeEventListener(
+                    'hardwareBackPress',
+                    onBackPress
+                );
+        }, [])
+    );
 
     return (
         <View style={styles.screen}>
             {quizObj === null ? (
-                <View>
+                <View style={styles.load}>
                     <Text>Loading</Text>
                 </View>
             ) : (
@@ -261,5 +311,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#8fe0ff',
         color: Colors.primary,
+    },
+    load: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

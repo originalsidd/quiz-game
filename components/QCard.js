@@ -15,10 +15,6 @@ const QCard = (props) => {
     const [selected, setSelected] = useState(-1);
     let op_arr = [...props.item.incorrect_answers, props.item.correct_answer];
     useEffect(() => {
-        op_arr = op_arr
-            .map((value) => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value);
         if (props.isReview) {
             setSelected(props.marked[props.id - 1]);
         }
@@ -28,7 +24,7 @@ const QCard = (props) => {
         if (props.isReview) return;
         if (selected == op) {
             const arr = props.marked;
-            arr[props.id - 1] = null;
+            arr[props.id - 1] = 0;
             props.setMarked(arr);
             setSelected(-1);
         } else {
@@ -58,12 +54,37 @@ const QCard = (props) => {
                 {op_arr.map((op, index) => (
                     <TouchableOpacity
                         key={index}
-                        style={{
-                            ...styles.optionStyle,
-                            borderColor: op == selected ? '#88dd77' : '#ccc',
-                            backgroundColor:
-                                op == selected ? '#aaeeaa70' : '#eee',
-                        }}
+                        style={
+                            props.isReview
+                                ? {
+                                      ...styles.optionStyle,
+                                      borderColor:
+                                          op == props.item.correct_answer &&
+                                          selected == 0
+                                              ? '#88dd77'
+                                              : op == props.item.correct_answer
+                                              ? '#88dd77'
+                                              : op == selected
+                                              ? '#dd2222'
+                                              : '#ccc',
+                                      backgroundColor:
+                                          op == props.item.correct_answer &&
+                                          selected == 0
+                                              ? '#aaeeaa70'
+                                              : op == props.item.correct_answer
+                                              ? '#aaeeaa70'
+                                              : op == selected
+                                              ? '#dd222270'
+                                              : '#ccc',
+                                  }
+                                : {
+                                      ...styles.optionStyle,
+                                      borderColor:
+                                          op == selected ? '#ffaa00' : '#ccc',
+                                      backgroundColor:
+                                          op == selected ? '#ffbb0070' : '#eee',
+                                  }
+                        }
                         onPress={() => selectHandler(op)}
                     >
                         <Text style={styles.opText}>

@@ -6,7 +6,6 @@ import { AppNavigator, AuthNavigator } from './Navigators';
 export const AuthContext = React.createContext(null);
 const RootNavigator = () => {
     const { user } = useAuthentication();
-    // return <AppNavigator />;
 
     return user ? (
         <AuthContext.Provider value={user}>

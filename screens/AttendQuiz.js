@@ -6,8 +6,17 @@ import HeaderButton from '../components/HeaderButton';
 import { COLORS } from '../data/dummy-data';
 import { setQuiz } from '../store/actions/action';
 import { connect } from 'react-redux';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { useState } from 'react';
 
 const AttendQuiz = (props) => {
+    const [amtOpen, setamtOpen] = useState(false);
+    const [amtValue, setamtValue] = useState(5);
+    const [amt, setamt] = useState([
+        { label: '5', value: '5' },
+        { label: '10', value: '10' },
+        { label: '15', value: '15' },
+    ]);
     const id = props.route.params.id;
     const subject = props.route.params.sub;
     const index = props.route.params.index;
@@ -15,7 +24,7 @@ const AttendQuiz = (props) => {
 
     const attendQuizHandler = () => {
         const options = {
-            amt: 10,
+            amt: amtValue,
             category: 18,
             difficulty: 'medium',
         };
@@ -32,9 +41,21 @@ const AttendQuiz = (props) => {
                 <View style={styles.quizTitle}>
                     <Text style={styles.title}>{subject}</Text>
                 </View>
-                <Text style={styles.desc}>
-                    The quiz consists of 5 questions.
-                </Text>
+                <View style={styles.drop}>
+                    <Text style={styles.textPad}>Set No. of Questions</Text>
+                    <DropDownPicker
+                        style={styles.dropdown}
+                        open={amtOpen}
+                        value={amtValue}
+                        items={amt}
+                        setOpen={setamtOpen}
+                        setValue={setamtValue}
+                        setItems={setamt}
+                        placeholder='5'
+                        zIndex={3000}
+                        zIndexInverse={1000}
+                    />
+                </View>
                 <View style={styles.quizStart}>
                     <Button
                         title='Start'
@@ -74,7 +95,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     quizInfo: {
-        height: 200,
+        height: 240,
         width: '90%',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -116,5 +137,48 @@ const styles = StyleSheet.create({
     },
     quizStart: {
         width: 100,
+    },
+    drop: {
+        flexDirection: 'row',
+        width: '80%',
+        alignItems: 'center',
+        height: 80,
+    },
+    dropdown: {
+        height: 20,
+        width: 100,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    label: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        left: 22,
+        top: 8,
+        zIndex: 999,
+        paddingHorizontal: 8,
+        fontSize: 14,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+    },
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
+    },
+    textPad: {
+        paddingRight: 10,
     },
 });

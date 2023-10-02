@@ -1,11 +1,24 @@
-import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    Dimensions,
+    TouchableOpacity,
+} from 'react-native';
 
 import Colors from '../constants/Colors';
 import useAuthentication from '../utils/hooks/useAuthentication';
+import { signOut, getAuth } from 'firebase/auth';
+const auth = getAuth();
 
 const MiniProfile = () => {
     const { user } = useAuthentication();
     console.log(user);
+
+    const signOutHandler = async () => {
+        await signOut(auth);
+    };
     return (
         <View style={styles.screen}>
             <Image
@@ -16,7 +29,9 @@ const MiniProfile = () => {
             />
             <View style={styles.info}>
                 <Text style={styles.title}>{user?.email}</Text>
-                <Text style={styles.detail}>Profile Info</Text>
+                <TouchableOpacity onPress={signOutHandler}>
+                    <Text style={styles.detail}>Sign Out</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -53,5 +68,6 @@ const styles = StyleSheet.create({
     },
     detail: {
         textAlign: 'left',
+        color: '#ee2222',
     },
 });

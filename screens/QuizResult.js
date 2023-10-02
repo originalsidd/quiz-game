@@ -43,6 +43,7 @@ const QuizResult = (props) => {
                 setQuizData(data[0]);
                 setQuizArr(data[0].quizObj.ques_arr);
                 setMarked(data[0].marked);
+                markQuiz(data[0]);
                 console.log('WOWOWOW: ' + marked);
             })
             .catch((error) => {
@@ -51,11 +52,13 @@ const QuizResult = (props) => {
     };
 
     const markQuiz = (quiz) => {
-        const correct = quiz.marked;
+        console.log('quiz.marked: ' + quiz.marked);
+        let correct = quiz.marked;
+        console.log(quiz.quizObj.ques_arr);
         correct = correct.map(
-            (item, index) => quiz.quizObj.results[index].correct_answer === item
+            (item, index) =>
+                quiz.quizObj.ques_arr[index].correct_answer === item
         );
-        console.log(correct);
     };
 
     useEffect(() => {
@@ -80,11 +83,15 @@ const QuizResult = (props) => {
                 <View>
                     <Text>Loading</Text>
                 </View>
+            ) : marked === null ? (
+                <View>
+                    <Text>No Quizzes taken yet</Text>
+                </View>
             ) : (
                 <>
                     <View style={styles.quizTitle}>
                         <Text style={styles.title}>
-                            {/* {quizData.quizObj.category} */}
+                            {quizData?.quizObj?.category}
                         </Text>
                     </View>
                     <View style={styles.quizInfo}>
